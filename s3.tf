@@ -10,3 +10,14 @@ resource "aws_s3_bucket_public_access_block" "logs" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "logs" {
+  bucket = aws_s3_bucket.logs.id
+  rule {
+    id     = "expire-flow-logs"
+    status = "Enabled"
+    expiration {
+      days = var.retention_days
+    }
+  }
+}
